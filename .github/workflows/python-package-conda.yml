@@ -24,11 +24,8 @@ jobs:
           sudo apt-get install -y jq
 
       - name: Fetch GitHub IP addresses
-        id: fetch-ip
         run: |
-          ip_data=$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/meta)
-          github_ips=$(echo $ip_data | jq -r '.pages[]')
-          echo "github_ips=$github_ips" >> $GITHUB_ENV
+          curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/meta | jq -r '.pages[]' > github_ips.txt
 
       - name: Install dependencies
         run: |
@@ -48,4 +45,4 @@ jobs:
 
       - name: Display GitHub IP addresses
         run: |
-          echo "GitHub IP addresses: ${{ env.github_ips }}"
+          cat github_ips.txt
